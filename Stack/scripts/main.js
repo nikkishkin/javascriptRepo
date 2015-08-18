@@ -1,5 +1,3 @@
-//alert('Hello!');
-
 function Stack(){
 	this.head = null;
 }

@@ -1,5 +1,3 @@
-//alert('Hello!');
-
 function Node(data) {
 	this.data = data;
 	this.prev = null;
@@ -130,21 +128,3 @@ var list = new List();
 alert(list.append(1).append(2).append(3).deleteAt(2).reverse().at(0));
 list.append(7).append(7);
 showList(list);
-
-//--------------------------------------
-
-// List.prototype.insertAt = function(data, index) {
-	// var nodeInList = this.nodeAt(index);
-	// if (nodeInList == null) {
-		// this.append(data);
-	// } else {
-		// var newNode = new Node(data);
-		// newNode.prev = nodeInList.prev;
-		// newNode.next = nodeInList;
-		// newNode.prev.next = newNode;
-		// newNode.next.prev = newNode;
-		// if (index === 0) {
-			// this._head = newNode;
-		// }
-	// }
-// }
