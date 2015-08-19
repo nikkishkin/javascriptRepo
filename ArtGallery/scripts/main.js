@@ -1,6 +1,6 @@
 (function() {
 	var selectedIndex = 0;
-	var itemsCount;
+	var items;
 	
 	$(document).ready(function() {
 		$.getJSON("pictures.json", showExhibits);
@@ -8,7 +8,7 @@
 	});
 	
 	function keydownHandler(event) {
-		if (itemsCount) {
+		if (items) {
 			switch(event.which) {
 				case 37:
 					event.preventDefault();
@@ -22,12 +22,12 @@
 					
 					var delta = selectedElement.offset().left - $("body").scrollLeft();
 					if (delta < 0) {
-						window.scrollBy(delta, 0)
+						window.scrollBy(delta, 0);
 					}
 					break;
 				case 39:
 					event.preventDefault();
-					if (selectedIndex === (itemsCount - 1)) {
+					if (selectedIndex === (items.length - 1)) {
 						break;
 					}
 					selectedIndex++;
@@ -38,7 +38,10 @@
 					var delta = $("body").innerWidth() - selectedElement.offset().left 
 						- selectedElement.outerWidth() + $("body").scrollLeft();
 					if (delta < 0) {
-						window.scrollBy(-delta, 0)
+						window.scrollBy(-delta, 0);
+						if (selectedIndex + 1 < items.length) {
+							$("#exhibitList").append(items[selectedIndex + 1]);
+						}
 					}
 					break;
 			}
@@ -46,7 +49,7 @@
 	}
 	
 	function showExhibits(data) {
-		var items = [];
+		items = [];
 		if (data.length > 0) {
 			items.push("<li class='selected'><div class='pictureContainer'><img class='picture' src='"
 				+ data[0].source + "'></div><div class='description'>" + data[0].description 
@@ -57,8 +60,13 @@
                 + data[i].source + "'></div><div class='description'>" + data[i].description 
                 + "</div></li>");
 		}
-		itemsCount = items.length;
-
-        $("#exhibitList").html(items.join(""));
+		
+		var renderCount = (getItemsToRenderCount() < data.length) ? getItemsToRenderCount() : data.length;
+		
+		$("#exhibitList").html(items.slice(0, renderCount).join(""));
+	}
+	
+	function getItemsToRenderCount() {
+		return Math.floor($("body").innerWidth() / $("#exhibitList li").first().outerWidth()) + 1;
 	}
 })();
