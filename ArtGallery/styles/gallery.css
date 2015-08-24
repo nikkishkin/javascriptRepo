@@ -50,6 +50,8 @@ ul {
     width: 316px;
     text-align: center;
     vertical-align: top;
+	transform: translateX(0px);
+	transition: transform 0.5s;
 }
 
 /*#endregion */

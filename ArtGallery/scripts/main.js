@@ -1,6 +1,7 @@
 (function() {
 	var selectedIndex = 0;
 	var items;
+	var renderedItemsCount = 0;
 	
 	$(document).ready(function() {
 		$.getJSON("pictures.json", showExhibits);
@@ -22,7 +23,9 @@
 					
 					var delta = selectedElement.offset().left - $("body").scrollLeft();
 					if (delta < 0) {
-						window.scrollBy(delta, 0);
+						var oldDelta = parseInt($("#exhibitList li").css("transform")
+							.split('(')[1].split(')')[0].split(',')[4], 10);
+						$("#exhibitList li").css("transform", "translateX(" + (oldDelta - delta) + "px)");
 					}
 					break;
 				case 39:
@@ -38,10 +41,13 @@
 					var delta = $("body").innerWidth() - selectedElement.offset().left 
 						- selectedElement.outerWidth() + $("body").scrollLeft();
 					if (delta < 0) {
-						window.scrollBy(-delta, 0);
-						if (selectedIndex + 1 < items.length) {
+						if (renderedItemsCount < items.length) {
 							$("#exhibitList").append(items[selectedIndex + 1]);
+							renderedItemsCount++;
 						}
+						var oldDelta = parseInt($("#exhibitList li").css("transform")
+							.split('(')[1].split(')')[0].split(',')[4], 10);
+						$("#exhibitList li").css("transform", "translateX(" + (oldDelta + delta) + "px)");
 					}
 					break;
 			}
@@ -61,9 +67,9 @@
                 + "</div></li>");
 		}
 		
-		var renderCount = (getItemsToRenderCount() < data.length) ? getItemsToRenderCount() : data.length;
-		
+		var renderCount = (getItemsToRenderCount() < data.length) ? getItemsToRenderCount() : data.length;	
 		$("#exhibitList").html(items.slice(0, renderCount).join(""));
+		renderedItemsCount = renderCount;
 	}
 	
 	function getItemsToRenderCount() {
